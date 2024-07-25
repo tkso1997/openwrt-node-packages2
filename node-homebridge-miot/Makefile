@@ -4,17 +4,17 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NPM_NAME:=homebridge-shelly-ds9
+PKG_NPM_NAME:=homebridge-miot
 PKG_NAME:=node-$(PKG_NPM_NAME)
-PKG_VERSION:=1.4.0
-PKG_RELEASE:=1
+PKG_VERSION:=1.7.1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NPM_NAME)-$(PKG_VERSION).tgz
 PKG_SOURCE_URL:=https://registry.npmjs.org/$(PKG_NPM_NAME)/-/
-PKG_HASH:=2c36942825273baa2ee1c89b95da9f26441832f3db5e96a59808de2d30c281c8
+PKG_HASH:=bdfc8f0dc716c90cb5035b995b03b4eb397f5b6b94401e209dca57a20d898554
 
 PKG_MAINTAINER:=Hirokazu MORIKAWA <morikw2@gmail.com>
-PKG_LICENSE:=GPL-3.0
+PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
 
 PKG_BUILD_DEPENDS:=node/host
@@ -23,17 +23,17 @@ PKG_BUILD_FLAGS:=no-mips16
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/node-homebridge-shelly-ds9
+define Package/node-homebridge-miot
   SUBMENU:=Node.js
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=Homebridge plugin for Shelly
-  URL:=https://www.npmjs.com/package/homebridge-shelly-ds9
+  TITLE:=Homebridge plugin for devices supporting the miot
+  URL:=https://www.npmjs.com/package/homebridge-miot
   DEPENDS:=+node +node-homebridge
 endef
 
-define Package/node-homebridge-shelly-ds9/description
- Homebridge plugin for Shelly, enabling HomeKit support for the next generation of Shelly devices.
+define Package/node-homebridge-miot/description
+ Homebridge plugin for devices supporting the miot protocol
 endef
 
 TAR_OPTIONS+= --strip-components 1
@@ -58,22 +58,22 @@ define Build/Compile
 	find $(PKG_BUILD_DIR)/node_modules -type d -empty -print0 | xargs -0 -r rmdir || true
 endef
 
-define Package/node-homebridge-shelly-ds9/install
+define Package/node-homebridge-miot/install
 	$(INSTALL_DIR) $(1)/usr/lib/node/$(PKG_NPM_NAME)
 	$(CP) $(PKG_BUILD_DIR)/{package.json,LICENSE} \
 		$(1)/usr/lib/node/$(PKG_NPM_NAME)/
 	$(CP) $(PKG_BUILD_DIR)/{*.md,*.js,config.schema.json} \
 		$(1)/usr/lib/node/$(PKG_NPM_NAME)/
-	$(CP) $(PKG_BUILD_DIR)/{node_modules,dist} \
+	$(CP) $(PKG_BUILD_DIR)/{node_modules,cli,docs,homebridge-ui,lib} \
 		$(1)/usr/lib/node/$(PKG_NPM_NAME)/
 	$(INSTALL_DIR) $(1)/usr/lib/node_modules
 	$(LN) ../node/$(PKG_NPM_NAME) $(1)/usr/lib/node_modules/$(PKG_NPM_NAME)
 endef
 
-define Package/node-homebridge-shelly-ds9/postrm
+define Package/node-homebridge-miot/postrm
 #!/bin/sh
-rm /usr/lib/node_modules/homebridge-shelly-ds9 || true
-rm -rf /usr/lib/node/homebridge-shelly-ds9 || true
+rm /usr/lib/node_modules/homebridge-miot || true
+rm -rf /usr/lib/node/homebridge-miot || true
 endef
 
-$(eval $(call BuildPackage,node-homebridge-shelly-ds9))
+$(eval $(call BuildPackage,node-homebridge-miot))
